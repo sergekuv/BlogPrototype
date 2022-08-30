@@ -1,0 +1,65 @@
+﻿@page
+@model Cust.Pages.AppUsers.IndexModel
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<h1>Users</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].UserItem.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].UserItem.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].UserItem.Alias)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].UserItem.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].HasAdminClaim)
+            </th>
+            <th>
+                Claims
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserItem.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserItem.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserItem.Alias)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserItem.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HasAdminClaim)
+                </td>
+
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.UserItem.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.UserItem.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.UserItem.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
