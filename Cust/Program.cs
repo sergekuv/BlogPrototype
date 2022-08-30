@@ -34,6 +34,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("CanManageUsers", policyBuider => policyBuider.AddRequirements(new AllowedManagementRequirement()));
+    options.AddPolicy("TagEditor", policyBuilder => policyBuilder.RequireClaim("IsAdmin"));
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, UserAdminHandler>();

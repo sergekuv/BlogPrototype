@@ -23,5 +23,6 @@ public class CustContext : IdentityDbContext<CustUser>
 
     public DbSet<Cust.Models.Student>? Student { get; set; }
     public DbSet<Cust.Areas.Identity.Data.CustUser>? CustUser { get; set; }
+    public DbSet<Cust.Models.Tag>? Tag { get; set; }
 
 }

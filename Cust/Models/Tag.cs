@@ -8,6 +8,8 @@ namespace Cust.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "Tag")]
+        [StringLength(20)]
         public string Id { get; set; }
+        public string Description { get; set; }
     }
 }
