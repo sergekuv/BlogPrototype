@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Cust.Data;
 using Cust.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cust.Pages.Tags
 {
+    [Authorize("TagEditor")]
     public class EditModel : PageModel
     {
         private readonly Cust.Data.CustContext _context;
@@ -25,12 +27,12 @@ namespace Cust.Pages.Tags
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null || _context.Tag == null)
+            if (id == null || _context.Articles == null)
             {
                 return NotFound();
             }
 
-            var tag =  await _context.Tag.FirstOrDefaultAsync(m => m.Id == id);
+            var tag =  await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
             if (tag == null)
             {
                 return NotFound();
@@ -71,7 +73,7 @@ namespace Cust.Pages.Tags
 
         private bool TagExists(string id)
         {
-          return (_context.Tag?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Articles?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

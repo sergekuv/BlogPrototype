@@ -29,7 +29,7 @@ namespace Cust.Pages.AppUsers
         public IList<CustUser> AppUser { get; set; } = default!; //
         public IList<DisplayItem> Users { get; set; } //
 
-        UserManager<CustUser> _userManager;
+        readonly UserManager<CustUser> _userManager;
         private readonly Cust.Data.CustContext _context;
 
         public IndexModel(UserManager<CustUser> userManager,
@@ -50,7 +50,8 @@ namespace Cust.Pages.AppUsers
                 foreach (var u in AppUser)
                 {
                     var claim = _userManager.GetClaimsAsync(u).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
-                    bool hasAdminClaim = claim != null ? true : false;
+                    bool hasAdminClaim = claim != null;
+                    //bool hasAdminClaim = claim != null ? true : false;
                     Users.Add(new DisplayItem(u, hasAdminClaim));
                 }
             }

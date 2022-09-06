@@ -23,12 +23,12 @@ namespace Cust.Pages.Tags
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null || _context.Tag == null)
+            if (id == null || _context.Articles == null)
             {
                 return NotFound();
             }
 
-            var tag = await _context.Tag.FirstOrDefaultAsync(m => m.Id == id);
+            var tag = await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
             if (tag == null)
             {
                 return NotFound();

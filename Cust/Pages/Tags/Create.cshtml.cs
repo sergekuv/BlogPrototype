@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Cust.Data;
 using Cust.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cust.Pages.Tags
 {
+    [Authorize("TagEditor")]
     public class CreateModel : PageModel
     {
         private readonly Cust.Data.CustContext _context;
@@ -31,20 +34,44 @@ namespace Cust.Pages.Tags
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (_context.Tag.Where(t => t.Id.ToUpper() == Tag.Id.ToUpper()).FirstOrDefault() != null)
+            var validationErrors = ModelState.Values.Where(E => E.Errors.Count > 0)
+                .SelectMany(E => E.Errors)
+                .Select(E => E.ErrorMessage)
+            .ToList();
+
+            bool tagAlreadyExists = _context.Tags.Where(t => t.Id.ToUpper() == Tag.Id.ToUpper()).Any();
+            if (tagAlreadyExists)
             {
-                ModelState.AddModelError(String.Empty, "Tag with this name already exists");
+                ModelState.AddModelError(string.Empty, "Tag already exists");
             }
 
-          if (!ModelState.IsValid || _context.Tag == null || Tag == null)
+            if (!ModelState.IsValid || _context.Tags == null || Tag == null)
             {
                 return Page();
             }
 
-            _context.Tag.Add(Tag);
-            await _context.SaveChangesAsync();
+            Tag emptyTag = new();
 
-            return RedirectToPage("./Index");
+            if (await TryUpdateModelAsync<Tag>(
+                emptyTag,
+                "tag",
+                t => t.Id, t => t.Disabled))
+            {
+                _context.Tags.Add(emptyTag);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
+            }
+
+            return Page();
+            //if (!ModelState.IsValid || _context.Articles == null || Tag == null)
+            //{
+            //    return Page();
+            //}
+
+            //_context.Articles.Add(Tag);
+            //await _context.SaveChangesAsync();
+
+            //return RedirectToPage("./Index");
         }
     }
 }

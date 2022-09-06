@@ -24,12 +24,12 @@ namespace Cust.Pages.Tags
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null || _context.Tag == null)
+            if (id == null || _context.Articles == null)
             {
                 return NotFound();
             }
 
-            var tag = await _context.Tag.FirstOrDefaultAsync(m => m.Id == id);
+            var tag = await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
 
             if (tag == null)
             {
@@ -44,16 +44,16 @@ namespace Cust.Pages.Tags
 
         public async Task<IActionResult> OnPostAsync(string id)
         {
-            if (id == null || _context.Tag == null)
+            if (id == null || _context.Articles == null)
             {
                 return NotFound();
             }
-            var tag = await _context.Tag.FindAsync(id);
+            var tag = await _context.Articles.FindAsync(id);
 
             if (tag != null)
             {
-                Tag = tag;
-                _context.Tag.Remove(Tag);
+                tag.Disabled = true;
+
                 await _context.SaveChangesAsync();
             }
 

@@ -10,6 +10,8 @@ namespace Cust.Models
         [Display(Name = "Tag")]
         [StringLength(20)]
         public string Id { get; set; }
-        public string Description { get; set; }
+        public bool Disabled { get; set; }
+
+        public ICollection<Article>? Articles { get; set; }
     }
 }

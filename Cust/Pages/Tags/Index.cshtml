@@ -15,30 +15,29 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Tag[0].Id)
+                @Html.DisplayNameFor(model => model.Tags[0].Id)
             </th>
-
             <th>
-                @Html.DisplayNameFor(model => model.Tag[0].Description)
+                @Html.DisplayNameFor(model => model.Tags[0].Disabled)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Tag) {
+@foreach (var item in Model.Tags) {
         <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                @Html.DisplayFor(modelItem => item.Disabled)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> 
+@*                |
                 <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+                <a asp-page="./Delete" asp-route-id="@item.Id">Disable</a>
+*@            </td>
         </tr>
 }
     </tbody>

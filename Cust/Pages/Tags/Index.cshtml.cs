@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Cust.Data;
 using Cust.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Cust.Pages.Tags
 {
-    [Authorize("TagEditor")]
     public class IndexModel : PageModel
     {
         private readonly Cust.Data.CustContext _context;
@@ -21,13 +19,13 @@ namespace Cust.Pages.Tags
             _context = context;
         }
 
-        public IList<Tag> Tag { get;set; } = default!;
+        public IList<Tag> Tags { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Tag != null)
+            if (_context.Articles != null)
             {
-                Tag = await _context.Tag.ToListAsync();
+                Tags = await _context.Tags.ToListAsync();
             }
         }
     }
