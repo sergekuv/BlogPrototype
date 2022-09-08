@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cust.Data;
 using Cust.Models;
 
-namespace Cust.Pages.Tags
+namespace Cust.Pages.Articles
 {
     public class DeleteModel : PageModel
     {
@@ -20,41 +20,40 @@ namespace Cust.Pages.Tags
         }
 
         [BindProperty]
-      public Tag Tag { get; set; } = default!;
+      public Article Article { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Tags == null)
+            if (id == null || _context.Article == null)
             {
                 return NotFound();
             }
 
-            var tag = await _context.Tags.FirstOrDefaultAsync(m => m.Id == id);
-            // var tag = await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
+            var article = await _context.Article.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (tag == null)
+            if (article == null)
             {
                 return NotFound();
             }
             else 
             {
-                Tag = tag;
+                Article = article;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Tags == null)
+            if (id == null || _context.Article == null)
             {
                 return NotFound();
             }
-            var tag = await _context.Tags.FindAsync(id);
+            var article = await _context.Article.FindAsync(id);
 
-            if (tag != null)
+            if (article != null)
             {
-                tag.Disabled = true;
-
+                Article = article;
+                _context.Article.Remove(Article);
                 await _context.SaveChangesAsync();
             }
 

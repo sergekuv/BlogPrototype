@@ -1,0 +1,88 @@
+﻿@page
+@model Cust.Pages.Articles.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Article.Title" class="control-label"></label>
+                <input asp-for="Article.Title" class="form-control" />
+                <span asp-validation-for="Article.Title" class="text-danger"></span>
+            </div>
+
+            <!--            -->
+            <div class="form-group">
+                <div class="table">
+                    <table>
+                        <tr>
+                            @{
+                                int cnt = 0;
+
+                                foreach (var tag in Model.AssignedTagDataList)
+                                {
+                                    if (cnt++ % 5 == 0)
+                                    {
+                                    @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedTags"
+                                               value="@tag.TagId"
+                                               @(Html.Raw(tag.Assigned ? "checked=\"checked\"" : "")) />
+                                               @tag.TagId @(Html.Raw("&nbsp &nbsp"))
+                                               
+                                    @:</td>
+                                }
+                            @:</tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+
+
+            <!--    -->
+
+            <div class="form-group">
+                <label asp-for="Article.Author" class="control-label"hidden></label>
+                <input asp-for="Article.Author" class="form-control" value=@User.Identity.Name  hidden/>
+                <span asp-validation-for="Article.Author" class="text-danger"></span>
+            </div>
+
+
+@*            <div class="form-group">
+                <label asp-for="Article.LastEditDate" class="control-label"></label>
+                <input asp-for="Article.LastEditDate" class="form-control" />
+                <span asp-validation-for="Article.LastEditDate" class="text-danger"></span>
+            </div>
+*@
+            <div class="form-group">
+                <label asp-for="Article.Content" class="control-label"></label>
+                @*<input asp-for="Article.Content" class="form-control" />*@
+                <textarea asp-for="Article.Content" class="form-control"></textarea>
+
+                <span asp-validation-for="Article.Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cust.Data;
 using Cust.Models;
 
-namespace Cust.Pages.Tags
+namespace Cust.Pages.Articles
 {
     public class DetailsModel : PageModel
     {
@@ -19,23 +19,23 @@ namespace Cust.Pages.Tags
             _context = context;
         }
 
-      public Tag Tag { get; set; } = default!; 
+      public Article Article { get; set; } = default!; 
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Articles == null)
+            if (id == null || _context.Article == null)
             {
                 return NotFound();
             }
 
-            var tag = await _context.Tags.FirstOrDefaultAsync(m => m.Id == id);
-            if (tag == null)
+            var article = await _context.Article.FirstOrDefaultAsync(m => m.Id == id);
+            if (article == null)
             {
                 return NotFound();
             }
             else 
             {
-                Tag = tag;
+                Article = article;
             }
             return Page();
         }

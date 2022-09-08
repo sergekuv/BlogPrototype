@@ -15,7 +15,7 @@ public class CustContext : IdentityDbContext<CustUser>
     }
 
     public DbSet<CustUser> CustUser { get; set; }
-    public DbSet<Tag> Articles { get; set; }
+    public DbSet<Article> Articles { get; set; }
     public DbSet<Tag> Comments { get; set; }
     public DbSet<Tag> Tags { get; set; }
 
@@ -33,6 +33,8 @@ public class CustContext : IdentityDbContext<CustUser>
         builder.Entity<Comment>().ToTable(nameof(Comment));
 
     }
+
+    public DbSet<Cust.Models.Article>? Article { get; set; }
 
 
 }

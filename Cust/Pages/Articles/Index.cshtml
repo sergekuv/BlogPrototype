@@ -1,0 +1,77 @@
+﻿@page
+@model Cust.Pages.Articles.IndexModel
+
+@{
+    ViewData["Title"] = "Articles";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Articles</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].LastEditDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Tags)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Article) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                <b>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </b>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastEditDate)
+            </td>
+            <td>
+                @foreach(var tag in item.Tags)
+                {
+                    @*@Html.DisplayFor(modelItem => tag.Id)*@
+
+                    @Html.DisplayFor(modelItem => tag.Id) 
+                    <span> </span>
+                }
+            </td>
+
+            <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">View</a>
+
+                    @if (User.Identity.Name == item.Author)
+                    {
+                       <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                @*<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>*@
+            </td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td colspan="3">
+                    @*@Html.DisplayFor(modelItem => item.Content)*@
+                    @item.Content.Substring(0, Math.Min(300, item.Content.Length))...
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -32,7 +32,7 @@ namespace Cust.Pages.Tags
                 return NotFound();
             }
 
-            var tag =  await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
+            var tag =  await _context.Tags.FirstOrDefaultAsync(m => m.Id == id);
             if (tag == null)
             {
                 return NotFound();
@@ -73,7 +73,7 @@ namespace Cust.Pages.Tags
 
         private bool TagExists(string id)
         {
-          return (_context.Articles?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Tags?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
