@@ -8,30 +8,44 @@
 
 <h1>Articles</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<a asp-page="Create">Create New</a>
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find an article by Tag/Title/Content:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Article[0].Author)
+                @Html.DisplayNameFor(model => model.Articles[0].Author)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Article[0].Title)
+                @Html.DisplayNameFor(model => model.Articles[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Article[0].LastEditDate)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                @Html.DisplayNameFor(model => model.Articles[0].LastEditDate)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Article[0].Tags)
+                @Html.DisplayNameFor(model => model.Articles[0].Tags)
             </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Article) {
+@foreach (var item in Model.Articles) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Author)
@@ -75,3 +89,23 @@
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.Articles.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Articles.HasNextPage ? "disabled" : "";
+}
+
+<a style="position:center;" asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Articles.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Articles.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
