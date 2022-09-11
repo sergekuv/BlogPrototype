@@ -46,7 +46,7 @@
 <div>
     <h4>Comments</h4>
 
-    <a asp-page="CreateNewComment">Create New Comment</a>
+    <a asp-page="CreateNewComment" asp-route-articleId="@Model.Article.Id">Create New Comment</a>
 
     <table class="table">
         <thead>
@@ -87,28 +87,6 @@
 
                 </tr>
 
-                <tr>
-                    
-                    <td colspan="2">
-                        @*@Html.DisplayFor(modelItem => item.Content)*@
-                        @item.Content))
-                        <a asp-page="./Details" asp-route-id="@item.Id"> . . . </a>
-                    </td>
-                    @* 
-                        <td>
-                        <a asp-page="./Details" asp-route-id="@item.Id">View</a>
-
-                        @if (User.Identity.Name == item.Author)
-                        {
-                            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-                        }
-                        @*<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-
-                        
-                    </td> 
-                    *@
-
-                </tr>
             }
         </tbody>
     </table>
