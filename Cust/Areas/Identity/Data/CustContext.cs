@@ -16,7 +16,7 @@ public class CustContext : IdentityDbContext<CustUser>
 
     public DbSet<CustUser> CustUser { get; set; }
     public DbSet<Article> Articles { get; set; }
-    public DbSet<Tag> Comments { get; set; }
+    public DbSet<Comment> Comments { get; set; }
     public DbSet<Tag> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
