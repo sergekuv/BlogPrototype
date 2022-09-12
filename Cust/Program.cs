@@ -4,9 +4,22 @@ using Cust.Data;
 using Cust.Areas.Identity.Data;
 using Cust.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using Serilog;
+
+
+var configuration = new ConfigurationBuilder()
+  .AddJsonFile("appsettings.json")
+  .Build();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+
+Log.Information("Starting App");
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("CustContextConnection") ?? throw new InvalidOperationException("Connection string 'CustContextConnection' not found.");
+Log.Information("Using ConnectionString {connectionString}", connectionString);
 
 builder.Services.AddDbContext<CustContext>(options =>
     options.UseSqlServer(connectionString));
@@ -14,6 +27,7 @@ builder.Services.AddDbContext<CustContext>(options =>
 //builder.Services.AddDefaultIdentity<CustUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<CustContext>();
 
+Log.Information("Adding DefaultIdentoty using hardcoded params");
 builder.Services.AddDefaultIdentity<CustUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;

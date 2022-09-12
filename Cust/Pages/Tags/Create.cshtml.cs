@@ -9,6 +9,7 @@ using Cust.Data;
 using Cust.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Serilog;
 
 namespace Cust.Pages.Tags
 {
@@ -24,6 +25,7 @@ namespace Cust.Pages.Tags
 
         public IActionResult OnGet()
         {
+            Log.Information("Pages -> Tags -> Create -> OnGet started");
             return Page();
         }
 
@@ -34,15 +36,26 @@ namespace Cust.Pages.Tags
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+            string logPrefix = "Pages -> Tags -> Create -> OnPostAsync: ";
+            Log.Information(logPrefix + "started");
             var validationErrors = ModelState.Values.Where(E => E.Errors.Count > 0)
                 .SelectMany(E => E.Errors)
                 .Select(E => E.ErrorMessage)
             .ToList();
+            if (validationErrors.Any())
+            {
+                Log.Warning(logPrefix + "The followiing Validation errors found when adding Tag:");
+                foreach (var error in validationErrors)
+                {
+                    Log.Warning(error);
+                }
+            }
 
             bool tagAlreadyExists = _context.Tags.Where(t => t.Id.ToUpper() == Tag.Id.ToUpper()).Any();
             if (tagAlreadyExists)
             {
-                ModelState.AddModelError(string.Empty, "Tag already exists");
+                ModelState.AddModelError(string.Empty, "Tag already exists: " + Tag.Id);
+                Log.Warning(logPrefix +" trying to add duplicate tag: {tagId}", Tag.Id);
             }
 
             if (!ModelState.IsValid || _context.Tags == null || Tag == null)
@@ -58,20 +71,12 @@ namespace Cust.Pages.Tags
                 t => t.Id, t => t.Disabled))
             {
                 _context.Tags.Add(emptyTag);
+                Log.Information(logPrefix + "awaiting for SaveChangesAsync for tag {tag}", Tag.Id);
                 await _context.SaveChangesAsync();
                 return RedirectToPage("./Index");
             }
 
             return Page();
-            //if (!ModelState.IsValid || _context.Articles == null || Tag == null)
-            //{
-            //    return Page();
-            //}
-
-            //_context.Articles.Add(Tag);
-            //await _context.SaveChangesAsync();
-
-            //return RedirectToPage("./Index");
         }
     }
 }

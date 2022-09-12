@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cust.Data;
 using Cust.Models;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace Cust.Pages.Articles
 {
@@ -31,6 +32,7 @@ namespace Cust.Pages.Articles
 
         public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
+            Log.Information("Article Index page OnGetAsync started with sortOrder: {@sortOrder}, currentFilter: {currentFilter}, searchString: {searchString}, pageIndex: {pageIndex}", sortOrder, currentFilter, searchString, pageIndex);
             CurrentSort = sortOrder;
             DateSort = String.IsNullOrEmpty(sortOrder) ? "date_asc" : "";
 

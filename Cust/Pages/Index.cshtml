@@ -6,5 +6,17 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>It's a test blog application. Please  
+        @if (User.Identity.Name == null)
+        {
+            <a id="register" asp-area="Identity" asp-page="/Account/Register">register</a>  
+            <span> and </span>
+        }
+        test it.
+    </p>
+    @if (User.Identity.Name == null)
+    {
+        <p>You may read articles even without registration, but registration is needed to add articles or comments.</p>
+        <p>Please don't forget to take an alias "<em>admin</em>" for one of users to provide him with admin rights.</p>
+    }
 </div>
