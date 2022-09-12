@@ -61,31 +61,30 @@
             <td>
                 @foreach(var tag in item.Tags)
                 {
-                    @*@Html.DisplayFor(modelItem => tag.Id)*@
-
-                    @Html.DisplayFor(modelItem => tag.Id) 
-                    <span> </span>
+                    @Html.DisplayFor(modelItem => tag.Id)
+                    <span>  </span>
                 }
             </td>
+            <td rowspan="2">
+                   <a asp-page="./Details" asp-route-id="@item.Id">View</a>
+
+                    @if (User.Identity.Name == item.Author || User.Claims.Where(c => c.Type == "IsAdmin").Count() > 0)
+                   {
+                       <br/>
+                       <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                       <br/>
+                       <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                   }
+            </td>
+
         </tr>
 
         <tr>
             <td></td>
             <td colspan="3">
-                    @*@Html.DisplayFor(modelItem => item.Content)*@
                     @item.Content.Substring(0, Math.Min(280, item.Content.Length))
                     <a asp-page="./Details" asp-route-id="@item.Id"> . . . </a>
             </td>
-                            <td>
-                        <a asp-page="./Details" asp-route-id="@item.Id">View</a>
-
-                    @if (User.Identity.Name == item.Author)
-                    {
-                               <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-                    }
-                    @*<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>*@
-                </td>
-
         </tr>
 }
     </tbody>

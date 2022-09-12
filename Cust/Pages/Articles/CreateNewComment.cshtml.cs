@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Cust.Data;
 using Cust.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cust.Pages.Articles
 {
+    [Authorize]
     public class CreateNewCommentModel : PageModel
     {
         private readonly CustContext _context;

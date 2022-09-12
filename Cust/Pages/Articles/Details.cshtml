@@ -82,7 +82,14 @@
                         @Html.DisplayFor(modelItem => item.LastEditDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Content)
+                        @*@Html.DisplayFor(modelItem => item.Content)*@
+                        @Html.Raw(item.Content.Replace(System.Environment.NewLine, "<br />"))
+                    </td>
+                    <td>
+                        @if (User.Identity.Name == item.Author || User.Claims.Where(c => c.Type == "IsAdmin").Count() > 0)
+                        {
+                            <a asp-page="./DeleteComment" asp-route-id="@item.Id">Delete</a>
+                        }
                     </td>
 
                 </tr>
