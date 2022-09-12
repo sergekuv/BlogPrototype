@@ -68,7 +68,7 @@
             <td rowspan="2">
                    <a asp-page="./Details" asp-route-id="@item.Id">View</a>
 
-                    @if (User.Identity.Name == item.Author || User.Claims.Where(c => c.Type == "IsAdmin").Count() > 0)
+                    @if (User.Identity.Name == item.Author || User.Claims.Where(c => c.Type == "IsEditor").Count() > 0)
                    {
                        <br/>
                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>

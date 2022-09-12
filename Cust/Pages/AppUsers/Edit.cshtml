@@ -43,6 +43,16 @@
                 <span asp-validation-for="InitialAdminClaim" class="text-danger"></span>
             </div>
 
+            <div class="form-group">
+                <label asp-for="CurrentEditorClaim" class="control-label"></label>
+                <input type="checkbox" asp-for="CurrentEditorClaim" class="form-check" />
+                <span asp-validation-for="CurrentEditorClaim" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InitialEditorClaim" class="control-label" hidden></label>
+                <input type="checkbox" asp-for="InitialEditorClaim" class="form-check" hidden/>
+                <span asp-validation-for="InitialEditorClaim" class="text-danger"></span>
+            </div>
 
 
             <div class="form-group">

@@ -17,10 +17,12 @@ namespace Cust.Pages.AppUsers
     {
         public CustUser UserItem { get; set; }
         public bool HasAdminClaim { get; set; }
-        public DisplayItem(CustUser userItem, bool hasAdminClaim)
+        public bool HasEditorClaim { get; set; }
+        public DisplayItem(CustUser userItem, bool hasAdminClaim, bool hasEditorClaim)
         {
             UserItem = userItem;
             HasAdminClaim = hasAdminClaim;
+            HasEditorClaim = hasEditorClaim;
         }
     }
     [Authorize("CanManageUsers")]
@@ -49,10 +51,12 @@ namespace Cust.Pages.AppUsers
 
                 foreach (var u in AppUser)
                 {
-                    var claim = _userManager.GetClaimsAsync(u).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
-                    bool hasAdminClaim = claim != null;
-                    //bool hasAdminClaim = claim != null ? true : false;
-                    Users.Add(new DisplayItem(u, hasAdminClaim));
+                    var adminClaim = _userManager.GetClaimsAsync(u).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
+                    bool hasAdminClaim = adminClaim != null;
+                    var editorClaim = _userManager.GetClaimsAsync(u).Result.Where(c => c.Type == "IsEditor").FirstOrDefault();
+                    bool hasEditorClaim = editorClaim != null;
+
+                    Users.Add(new DisplayItem(u, hasAdminClaim, hasEditorClaim));
                 }
             }
         }

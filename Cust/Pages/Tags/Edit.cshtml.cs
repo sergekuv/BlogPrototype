@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Cust.Pages.Tags
 {
-    [Authorize("TagEditor")]
+    [Authorize("Editor")]
     public class EditModel : PageModel
     {
         private readonly Cust.Data.CustContext _context;

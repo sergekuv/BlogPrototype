@@ -19,9 +19,8 @@ namespace Cust.Pages.AppUsers
     {
         private readonly Cust.Data.CustContext _context;
         UserManager<CustUser> _userManager;
-        Claim claimToEdit;
-       // public bool CurrentAdminClaim;
-        //bool InitialAdminClaim;
+        Claim adminClaimToEdit;
+        Claim editorClaimToEdit;
 
         public EditModel(UserManager<CustUser> userManager, Cust.Data.CustContext context)
         {
@@ -35,6 +34,10 @@ namespace Cust.Pages.AppUsers
         public bool CurrentAdminClaim { get; set; }
         [BindProperty]
         public bool InitialAdminClaim { get; set; }
+        [BindProperty]
+        public bool CurrentEditorClaim { get; set; }
+        [BindProperty]
+        public bool InitialEditorClaim { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -51,9 +54,15 @@ namespace Cust.Pages.AppUsers
             }
             AppUser = user;
 
-            claimToEdit = _userManager.GetClaimsAsync(user).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
-            InitialAdminClaim = claimToEdit != null ?  true : false;
+            adminClaimToEdit = _userManager.GetClaimsAsync(user).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
+            InitialAdminClaim = adminClaimToEdit != null ?  true : false;
             CurrentAdminClaim = InitialAdminClaim;
+
+            editorClaimToEdit = _userManager.GetClaimsAsync(user).Result.Where(c => c.Type == "IsEditor").FirstOrDefault();
+            InitialEditorClaim = editorClaimToEdit != null ? true : false;
+            CurrentEditorClaim = InitialEditorClaim;
+
+
             return Page();
         }
 
@@ -78,7 +87,6 @@ namespace Cust.Pages.AppUsers
 
             {
                 if (CurrentAdminClaim != InitialAdminClaim)
-
                 {
                     if (CurrentAdminClaim == true)
                     {
@@ -87,8 +95,22 @@ namespace Cust.Pages.AppUsers
                     }
                     else
                     {
-                        claimToEdit = _userManager.GetClaimsAsync(userToUpdate).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
-                        await _userManager.RemoveClaimAsync(userToUpdate, claimToEdit);
+                        adminClaimToEdit = _userManager.GetClaimsAsync(userToUpdate).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
+                        await _userManager.RemoveClaimAsync(userToUpdate, adminClaimToEdit);
+                    }
+                }
+
+                if (CurrentEditorClaim != InitialEditorClaim)
+                {
+                    if (CurrentEditorClaim == true)
+                    {
+                        Claim claim = new Claim("IsEditor", "");
+                        await _userManager.AddClaimAsync(userToUpdate, claim);
+                    }
+                    else
+                    {
+                        editorClaimToEdit = _userManager.GetClaimsAsync(userToUpdate).Result.Where(c => c.Type == "IsEditor").FirstOrDefault();
+                        await _userManager.RemoveClaimAsync(userToUpdate, editorClaimToEdit);
                     }
                 }
 

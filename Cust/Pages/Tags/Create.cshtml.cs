@@ -13,7 +13,7 @@ using Serilog;
 
 namespace Cust.Pages.Tags
 {
-    [Authorize("TagEditor")]
+    [Authorize("Editor")]
     public class CreateModel : PageModel
     {
         private readonly Cust.Data.CustContext _context;
