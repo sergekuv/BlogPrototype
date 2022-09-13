@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Cust.Areas.Identity.Pages.Account
 {
@@ -87,8 +88,11 @@ namespace Cust.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            string prefix = "Areas -> Identity -> Pages -> Account -> Login -> OnGetAsync: ";
+            Log.Information(prefix + "starting");
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
+                Log.Information(prefix + ErrorMessage);
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
@@ -104,6 +108,9 @@ namespace Cust.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            string prefix = "Areas -> Identity -> Pages -> Account -> Login -> OnPostAsync: ";
+            Log.Information(prefix + "starting");
+
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -115,6 +122,7 @@ namespace Cust.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    Log.Information(prefix + "successful login: " + Input.Email);
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
@@ -129,6 +137,7 @@ namespace Cust.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    Log.Information(prefix + "Invalid login attempt: " + Input.Email);
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
