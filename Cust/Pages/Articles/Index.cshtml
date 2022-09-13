@@ -41,6 +41,11 @@
                 @Html.DisplayNameFor(model => model.Articles[0].Tags)
             </th>
 
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].Comments)
+            </th>
+
+
             <th></th>
         </tr>
     </thead>
@@ -65,6 +70,11 @@
                     <span>  </span>
                 }
             </td>
+                <td>
+                    @item.Comments?.Count()
+                </td>
+
+
             <td rowspan="2">
                    <a asp-page="./Details" asp-route-id="@item.Id">View</a>
 
@@ -81,7 +91,7 @@
 
         <tr>
             <td></td>
-            <td colspan="3">
+            <td colspan="4">
                     @item.Content.Substring(0, Math.Min(280, item.Content.Length))
                     <a asp-page="./Details" asp-route-id="@item.Id"> . . . </a>
             </td>

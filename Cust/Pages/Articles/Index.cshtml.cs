@@ -52,7 +52,9 @@ namespace Cust.Pages.Articles
             //Filter will work properly with case insensitive DB collation
             if (!String.IsNullOrEmpty(searchString))
             {
-                articlesIQ = articlesIQ.Include(a => a.Tags).Where(s => s.Title.Contains(searchString)
+                articlesIQ = articlesIQ
+                    .Include(i => i.Comments)
+                    .Include(a => a.Tags).Where(s => s.Title.Contains(searchString)
                                        || s.Content.Contains(searchString)
                                        || s.Tags.Where(t => t.Id.Contains(searchString)).FirstOrDefault() != null);
             }
@@ -60,10 +62,10 @@ namespace Cust.Pages.Articles
             switch (sortOrder)
             {
                 case "date_asc":
-                    articlesIQ = articlesIQ.Include(a => a.Tags).OrderBy(r => r.LastEditDate);
+                    articlesIQ = articlesIQ.Include(i => i.Comments).Include(a => a.Tags).OrderBy(r => r.LastEditDate);
                     break;
                 default:
-                    articlesIQ = articlesIQ.Include(a => a.Tags).OrderByDescending(r => r.LastEditDate);
+                    articlesIQ = articlesIQ.Include(i => i.Comments).Include(a => a.Tags).OrderByDescending(r => r.LastEditDate);
                     break;
 
             }
