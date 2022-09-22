@@ -50,8 +50,7 @@ namespace Cust.Pages.Articles
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
+        // TODO modify to prevent overposting https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(int? id, string[] selectedTags)
         {
             if (id == null)
@@ -82,34 +81,6 @@ namespace Cust.Pages.Articles
             return Page();
 
         }
-
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Page();
-        //    }
-
-        //    _context.Attach(Article).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ArticleExists(Article.Id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return RedirectToPage("./Index");
-        //}
 
 
         private bool ArticleExists(int id)
@@ -147,10 +118,6 @@ namespace Cust.Pages.Articles
                     }
                 }
             }
-
-
-
-
         }
     }
 }

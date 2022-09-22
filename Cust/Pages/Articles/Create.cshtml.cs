@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Cust.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Cust.Pages.Articles
 {
@@ -28,6 +29,7 @@ namespace Cust.Pages.Articles
 
         public IActionResult OnGet()
         {
+
             Article article = new();
             article.Tags = new List<Tag>();
 
@@ -51,6 +53,7 @@ namespace Cust.Pages.Articles
 
             if (!ModelState.IsValid || _context.Articles == null || Article == null)
             {
+                Log.Warning("Articles -> Create -> OnPostAsync: ModelState isn't valid or other error(s) occured when trying to add an article");
                 return Page();
             }
 
@@ -73,7 +76,7 @@ namespace Cust.Pages.Articles
                     newArticle.Tags.Add(foundTag);
                 }
             }
-            //TODO If some tags are not found, we should add log that.. 
+            //TODO If some tags are not found, we should log that.. 
 
             try
             {
@@ -84,13 +87,14 @@ namespace Cust.Pages.Articles
                 {
                     _context.Articles.Add(newArticle);
                     await _context.SaveChangesAsync();
+                    Log.Information("Articles -> Create -> OnPostAsync: user {0} added an atricle with title: {1}", User.Identity.Name, newArticle.Title);
                     return RedirectToPage("./Index");
                 }
                 return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {
-                //TODO log error message
+                Log.Warning("Articles -> Create -> OnPostAsync: Exception while adding an article: {0}", ex);
             }
             PopulateAssignedTagData(_context, Article);
             return Page();
