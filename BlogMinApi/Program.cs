@@ -113,6 +113,7 @@ app.MapPost("/Articles", async (Article article, CustContext db) =>
 app.MapPut("/Articles/{id}", async (int? id, string title, string content, string[]? selectedTags, CustContext db) =>
 {
     //Вопрос - что в таких случаях правильнее принимать - целую статью или отдельные поля? 
+    //Читается легче статья, чем набор полей...
     if (id == null) return Results.NotFound();
 
     var articleToUpdate = await db.Articles
@@ -196,6 +197,17 @@ app.MapDelete("/Articles/DeleteComment/{id}", async (int id, CustContext db) =>
     return Results.NotFound();
 });
 
+app.MapDelete("/Articles/{id}", async (int id, CustContext db) =>
+{
+    if (await db.Articles.FindAsync(id) is Article toDelete)
+    {
+        db.Articles.Remove(toDelete);
+        await db.SaveChangesAsync();
+        return Results.Ok(toDelete);
+    }
+
+    return Results.NotFound();
+});
 
 
 app.Run();
