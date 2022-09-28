@@ -14,6 +14,7 @@ using Cust.Areas.Identity.Data;
 using Cust.Authorization;
 using BlogMinApi.Mapped;
 using BlogMinApi.Dto;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -136,119 +137,12 @@ app.MapPost("/Articles", [Authorize] async (ArticleDto article, IHttpContextAcce
 app.MapPut("/Articles/{id}", [Authorize] async (int id, ArticleDto article, IHttpContextAccessor httpContextAccessor, CustContext db) => await Articles.EditArticle(id, article, httpContextAccessor, db));
 app.MapDelete("/Articles/{id}", async (int id, IHttpContextAccessor httpContextAccessor, CustContext db) => await Articles.DeleteArticle(id, httpContextAccessor, db));
 
-
-app.MapPost("/Articles/CreateNewComment/{id}/", [Authorize] async (int articleId, string author, string commentContent, CustContext db) =>
-{
-    //if (articleId == null) return Results.NotFound();
-    var articleToUpdate = await db.Articles.FirstOrDefaultAsync(s => s.Id == articleId);
-    if (articleToUpdate == null) return Results.NotFound();
-
-    Comment newComment = new();
-    newComment.ArticleId = articleId;
-    newComment.LastEditDate = DateTime.Now;
-    newComment.Author = author;
-    newComment.Content = commentContent;
-
-    //TODO - .Author needs authentication
-    //TODO - check if Author exists and act accordingly
-    db.Comments.Add(newComment);
-    await db.SaveChangesAsync();
-
-    return Results.Created($"/Articles/Comments/{articleId}", articleId);
-});
-
-app.MapDelete("/Articles/DeleteComment/{id}", async (int id, IHttpContextAccessor httpContextAccessor, CustContext db) =>
-{
-    if (await db.Comments.FindAsync(id) is Comment toDelete)
-    {
-        var userIsAuthor = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value == toDelete.Author;
-        var userIsEditor = httpContextAccessor.HttpContext.User.Claims.Where(c => c.Type == "IsEditor").FirstOrDefault() != null;
-        if (!(userIsAuthor || userIsEditor)) { return Results.Unauthorized(); }
-
-        db.Comments.Remove(toDelete);
-        await db.SaveChangesAsync();
-        return Results.Ok(toDelete);
-    }
-
-    return Results.NotFound();
-});
+app.MapPost("/Articles/CreateNewComment/{id}/", [Authorize] async (CommentDto comment, IHttpContextAccessor httpContextAccessor, CustContext db) => await Comments.CreateNewComment(comment, httpContextAccessor, db));
+app.MapDelete("/Articles/DeleteComment/{id}", async (int id, IHttpContextAccessor httpContextAccessor, CustContext db) => await Comments.DeleteComment(id, httpContextAccessor, db));
 
 
-
-app.MapPost("/minimalapi/security/getToken", [AllowAnonymous] async (UserManager<CustUser> userMgr, UserDto user) =>
-{
-    var identityUsr = await userMgr.FindByNameAsync(user.UserName);
-
-    if (await userMgr.CheckPasswordAsync(identityUsr, user.Password))
-    {
-        var issuer = builder.Configuration["Jwt:Issuer"];
-        var audience = builder.Configuration["Jwt:Audience"];
-        var securityKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var jwtTokenHandler = new JwtSecurityTokenHandler();
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new[] {
-                        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                        new Claim(JwtRegisteredClaimNames.Email, user.UserName),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
-           // Expires = DateTime.Now.AddMinutes(5),
-            Audience = audience,
-            Issuer = issuer,
-            SigningCredentials = credentials
-        };
-
-        var adminClaim = userMgr.GetClaimsAsync(identityUsr).Result.Where(c => c.Type == "IsAdmin").FirstOrDefault();
-        if (adminClaim != null)
-        {
-            tokenDescriptor.Subject.Claims.Append(new Claim("IsAdmin", ""));
-        }
-
-        var editorClaim = userMgr.GetClaimsAsync(identityUsr).Result.Where(c => c.Type == "IsEditor").FirstOrDefault();
-        if (editorClaim != null)
-        {
-            tokenDescriptor.Subject.AddClaim(new Claim("IsEditor", ""));
-        }
-
-        var token = jwtTokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = jwtTokenHandler.WriteToken(token);
-      
-        //var token = new JwtSecurityToken(issuer: issuer, audience: audience,signingCredentials: credentials);
-        //var tokenHandler = new JwtSecurityTokenHandler();
-        //var stringToken = tokenHandler.WriteToken(token);
-        var stringToken = jwtTokenHandler.WriteToken(token);
-
-        return Results.Ok(stringToken);
-    }
-    else
-    {
-        return Results.Unauthorized();
-    }
-});
-
-app.MapPost("/minimalapi/security/createUser", [AllowAnonymous] async (UserManager<CustUser> userMgr, UserDto user) =>
-{
-    var identityUser = new CustUser()
-    {
-        UserName = user.UserName,
-        Alias = user.Alias,
-        Email = user.UserName // + "@example.com"
-    };
-
-    var result = await userMgr.CreateAsync(identityUser, user.Password);
-
-    if (result.Succeeded)
-    {
-        return Results.Ok();
-    }
-    else
-    {
-        return Results.BadRequest();
-    }
-});
+app.MapPost("/minimalapi/security/getToken", [AllowAnonymous] async (UserManager<CustUser> userMgr, UserDto user) => await Users.GetToken(builder, userMgr, user));
+app.MapPost("/minimalapi/security/createUser", [AllowAnonymous] async (UserManager<CustUser> userMgr, UserDto user) => await Users.CreateUser(userMgr, user));
 
 app.Run();
 

@@ -125,7 +125,7 @@ public static class Articles
     }
 
 
-    private static bool IsAuthorOrEditor (Article article, IHttpContextAccessor httpContextAccessor)
+    private static bool IsAuthorOrEditor (BlogItem article, IHttpContextAccessor httpContextAccessor)
     {
         var isAuthor = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value == article.Author;
         var isEditor = httpContextAccessor.HttpContext.User.Claims.Where(c => c.Type == "IsEditor").FirstOrDefault() != null;
