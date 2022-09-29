@@ -22,7 +22,9 @@ public class Users
             Email = user.UserName
         };
 
-        if (userMgr.FindByEmailAsync(user.UserName) != null) { return Results.Text("User already exists"); } // Или тут уместнее другой код?
+        bool userExists = userMgr.FindByEmailAsync(user.UserName).Result != null;
+        bool aliasExists = userMgr.Users.Where(u => u.Alias == user.Alias).Any();
+        if (userExists || aliasExists) { return Results.Text("User or alias already exist"); } // Или тут уместнее другой код?
 
         var result = await userMgr.CreateAsync(identityUser, user.Password);
 
