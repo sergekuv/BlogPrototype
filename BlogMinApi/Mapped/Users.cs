@@ -22,6 +22,7 @@ public class Users
             Email = user.UserName
         };
 
+        if (!IsValidEmail(user.UserName)) { return Results.BadRequest(); }
         bool userExists = userMgr.FindByEmailAsync(user.UserName).Result != null;
         bool aliasExists = userMgr.Users.Where(u => u.Alias == user.Alias).Any();
         if (userExists || aliasExists) { return Results.Text("User or alias already exist"); } // Или тут уместнее другой код?
@@ -91,6 +92,25 @@ public class Users
             return Results.Unauthorized();
         }
 
+    }
+
+    static bool IsValidEmail(string email)
+    {
+        var trimmedEmail = email.Trim();
+
+        if (trimmedEmail.EndsWith("."))
+        {
+            return false; // suggested by @TK-421
+        }
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == trimmedEmail;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
 
