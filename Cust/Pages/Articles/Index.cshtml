@@ -92,7 +92,11 @@
         <tr>
             <td></td>
             <td colspan="4">
-                    @item.Content.Substring(0, Math.Min(280, item.Content.Length))
+                    @*Version for plain text (before Rich text editor was added)*@
+                    @*@item.Content.Substring(0, Math.Min(280, item.Content.Length))*@
+
+                    @*Version woith removed formatting*@
+                    @System.Text.RegularExpressions.Regex.Replace(item.Content.Substring(0, Math.Min(280, item.Content.Length)).ToString(), "<[^>]*>", "")
                     <a asp-page="./Details" asp-route-id="@item.Id"> . . . </a>
             </td>
         </tr>

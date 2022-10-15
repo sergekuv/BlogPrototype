@@ -79,28 +79,3 @@ namespace Cust.Pages.Articles
     }
 }
 
-
-// Initial version
-
-//namespace Cust.Pages.Articles
-//{
-//    public class IndexModel : PageModel
-//    {
-//        private readonly Cust.Data.CustContext _context;
-
-//        public IndexModel(Cust.Data.CustContext context)
-//        {
-//            _context = context;
-//        }
-
-//        public IList<Article> Article { get; set; } = default!;
-
-//        public async Task OnGetAsync()
-//        {
-//            if (_context.Article != null)
-//            {
-//                Article = await _context.Article.Include(a => a.Tags).ToListAsync();
-//            }
-//        }
-//    }
-//}

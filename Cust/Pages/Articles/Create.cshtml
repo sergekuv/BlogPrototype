@@ -83,6 +83,20 @@
     <a asp-page="Index">Back to List</a>
 </div>
 
-@section Scripts {
+@*@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+*@
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    @*Rich Text Editor according instructions here:  https://www.c-sharpcorner.com/article/inserting-rich-text-editor-in-asp-net-mvc-6/*@
+     <script>
+           tinymce.init({
+               selector: 'textarea'
+
+               //selector: 'textarea#body'
+           });
+       </script>
 }
